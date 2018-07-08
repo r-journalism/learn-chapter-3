@@ -26,7 +26,7 @@ Clone or download and unzip this repo. Make sure the folder is **not** in a temp
 
 To ensure these files work as expected, please make sure the project directory is set up correctly: 
 
-When you type `getwd()` it should look something like `your_file_path/learn-r-chapter-2`
+When you type `getwd()` it should look something like `your_file_path/learn-r-chapter-3`
 
 You can manually set this up by:
 
