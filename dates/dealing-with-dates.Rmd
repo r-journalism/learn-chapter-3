@@ -1,11 +1,13 @@
 ---
 title: "Dealing with dates"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/wrangling/"
 output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/wrangling/
 ---
 
 This is from the [third chapter](http://learn.r-journalism.com/en/wrangling/dates/dates/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
@@ -28,6 +30,21 @@ Convert that date into a **date variable** with the function **mdy()**
 ```{r ex2, warning=F, message=F}
 # If you don't have lubridate installed yet uncomment the line below and run it
 #install.packages("lubridate")
+
+# NOTE: IF YOU GET AN ERROR ABOUTZ NOT HAVING A PACKAGE CALLED stringi
+# UNCOMMENT AND RUN THE LINES BELOW IF YOU HAVE A WINDOWS MACHINE
+
+#install.packages("glue", type="win.binary")
+#install.packages("stringi", type="win.binary")
+#install.packages("stringr", type="win.binary")
+#install.packages("lubridate", type="win.binary")
+
+# UNCOMMENT AND RUN THE LINES BELOW IF YOU HAVE A MAC MACHINE
+
+#install.packages("glue", type="mac.binary")
+#install.packages("stringi", type="mac.binary")
+#install.packages("stringr", type="mac.binary")
+#install.packages("lubridate", type="mac.binary")
 
 library(lubridate)
 
@@ -114,5 +131,17 @@ data
 ```
 
 That's a pretty good start for now. To see more functions and examples, check out [the vignette](https://cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html) for **lubridate**.
+
+
+
+----
+
+## Your turn
+
+Challenge yourself with [these exercises](http://code.r-journalism.com/chapter-3/#section-dealing-with-dates) so you'll retain the knowledge of this section.
+
+Instructions on how to run the exercise app are on the [intro page](https://learn.r-journalism.com/en/wrangling/) to this section.
+
+
 
 

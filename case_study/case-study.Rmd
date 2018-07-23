@@ -1,11 +1,11 @@
 ---
 title: "Murders case study"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/wrangling/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/wrangling/
 ---
 
 This is from the [third chapter](https://learn.r-journalism.com/en/wrangling/case_study/murders-case-study/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
@@ -20,11 +20,10 @@ Hargrove has since retired and runs the [Murder Accountability Project](http://w
 
 We're going to go over his algorithm and try to reproduce it.
 
-{{% notice warning %}}
-This is just an algorithm based on the available variables in the data. The results cannot match good, natural police work.  The methodology discussed in this section may produce false results either by making false matches between unrelated cases or by failing to detect known linked cases. Further investigation should be mandatory if reporting on findings to avoid unnecessary [overreaction](https://www.youtube.com/watch?v=kdpG92dsx1A). The ultimate authority on whether homicide cases should be linked rests with the local law enforcement agencies which investigate crimes and with the appropriate courts of criminal law.
-{{% /notice %}}
+**Warning**: This is just an algorithm based on the available variables in the data. The results cannot match good, natural police work.  The methodology discussed in this section may produce false results either by making false matches between unrelated cases or by failing to detect known linked cases. Further investigation should be mandatory if reporting on findings to avoid unnecessary [overreaction](https://www.youtube.com/watch?v=kdpG92dsx1A). The ultimate authority on whether homicide cases should be linked rests with the local law enforcement agencies which investigate crimes and with the appropriate courts of criminal law.
 
-Let's start by looking at the case of "Green River Killer" Gary Ridgway.
+
+Let's start by looking at [the case](https://www.biography.com/people/gary-ridgway-10073409) of "Green River Killer" Gary Ridgway.
 
 > Ridgway's slayings began in 1982, when young runaways and prostitutes began disappearing from state Route 99 in south King County, Washington. He brought many of them to his home and strangled them, then left them in woodsy, remote sites. The first few bodies turned up along the now-notorious Green River.
 
@@ -35,7 +34,7 @@ How would we find his victims in our data set?
 There were definitely patterns.
 
 * King County, Washington
-* Timespan was between 1982 and 2001
+* Time span was between 1982 and 2001
 * Female victims
 * Victims often strangled
 * Found in remote locations
@@ -92,12 +91,18 @@ murders  <- murders %>%
 View(murders)
 ```
 
-![](images/counties.png?classes=shadow)
+```{r img1, echo = F, out.width="100%"}
+library(knitr)
+include_graphics("images/counties.png")
+```
+
+**Tip**: This is where I'd put in sirens if I could. Really wrap your head around how this worked because joins are so very essential to expanding the capabilities of data analysis.
+
 
 Okay, that worked. Now we can filter it based on this criteria:
 
 * King County, Washington
-* Timespan was between 1982 and 2001
+* Time span was between 1982 and 2001
 * Female victims
 * Victims often strangled
 * Found in remote locations
@@ -114,7 +119,9 @@ greenway1 <- murders %>%
 View(greenway1)
 ```
 
-![](images/510.png?classes=shadow)
+```{r img2, echo = F, out.width="100%"}
+include_graphics("images/510.png")
+```
 
 Alright, we've narrowed it down to 510 cases by filtering with "king" county and "Washington" state.
 We set it between 1982 and 2001 and looked for female victims.
@@ -141,7 +148,10 @@ greenway2 <- greenway1 %>%
 View(greenway2)
 ```
 
-![](images/116.png?classes=shadow)
+```{r img3, echo = F, out.width="100%"}
+include_graphics("images/116.png")
+```
+
 
 Well, that narrowed it down.
 
@@ -212,17 +222,25 @@ msagrp <- murders %>%
 View(msagrp)
 ```
 
-![](images/msagrp.png?classes=shadow)
+
+```{r img4, echo = F, out.width="100%"}
+include_graphics("images/msagrp.png")
+```
+
 
 Alright, we have more than 10,000 clusters.
 
-Hargrove says we can filter it futher.
+Hargrove says we can filter it further.
 
 Look for female victims, and where clearance rates are less than 33 percent. And where there is more than one victim.
 
 ```{r msagrp_filtered}
 msagrp_filtered <- msagrp %>% 
-  filter(VicSex_label=="Female" & clearance <= 33 & cases > 1) 
+  filter(VicSex_label=="Female" & clearance <= 33 & cases > 1)
+
+```
+
+```{r dt1}
 datatable(msagrp_filtered)
 ```
 
@@ -230,7 +248,7 @@ We have narrowed down 10,000 clusters to 99.
 
 Let's expand the scope apply what we did to MSAs to Counties.
 
-Why is this distinction imporant? Well, Metro Statistical Areas are smaller than Counties.
+Why is this distinction important? Well, Metro Statistical Areas are smaller than Counties.
 
 Counties are so large that they're often covered by multiple agencies like town police departments and state police and sheriff's deputies focusing on different jurisdictions. Serial killers aren't limited to by their geography, so it's important to expand the scope.
 
@@ -244,6 +262,9 @@ countygrp <- murders %>%
   mutate(clearance=round(solved/cases*100,2)) %>% 
   filter(VicSex_label=="Female" & clearance <= 33 & cases > 1) %>% 
   arrange(desc(cases))
+```
+
+```{r dt2}
 
 datatable(countygrp)
 ```
@@ -280,21 +301,27 @@ countygrp2 <- murders %>%
   mutate(clearance=round(solved/cases*100,2)) %>% 
   filter(clearance <= 33 & cases > 1) %>% 
   arrange(desc(cases))
+```
+
+```{r dt3}
 
 datatable(countygrp2)
 ```
 
-Do you think a killer might be targetting a specific age group?
+Do you think a killer might be targeting a specific age group?
 
 You could filter the age like we did with years or we could create age categories with the data.
 
-Categorical data has been very useful so far. We can turn a continous variable like age into a categorical variable by dividing it into bins. 
+Categorical data has been very useful so far. We can turn a continuous variable like age into a categorical variable by dividing it into bins. 
 
 We can use `case_when()` with `mutate()` from the **dplyr** package.
 
 Let's go back to the **murders** data frame to add this new variable: *age_group*.
 
 Then we'll re-run code we created before with that new grouping variable.
+
+
+**Tip**: Remember, the ":" stand for through. So 0:14 means 0 through 14.
 
 ```{r age_bins}
 murders <- mutate(murders,
@@ -313,6 +340,9 @@ countygrp3 <- murders %>%
   mutate(clearance=round(solved/cases*100,2)) %>% 
   filter(VicSex_label=="Female" & clearance <= 33 & cases > 1) %>% 
   arrange(desc(cases))
+```
+
+```{r dt4}
 
 datatable(countygrp3)
 ```
@@ -322,7 +352,5 @@ Well done.
 I hope this was instrumental in showing you how to approach data to discover insights.
 
 Happy hunting.
-
-
 
 

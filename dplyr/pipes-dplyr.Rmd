@@ -1,11 +1,11 @@
 ---
 title: "Transforming and analyzing data"
 author: "Andrew Ba Tran"
-description: "https://learn.r-journalism.com/en/wrangling/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: https://learn.r-journalism.com/en/wrangling/
 ---
 
 
@@ -13,10 +13,9 @@ This is from the [third chapter](https://learn.r-journalism.com/en/wrangling/dpl
 
 Why use **dplyr**?
 
-* Works best with dataframes, which is what journalists are used to
+* Designed to work with data frames, which is what journalists are used to
 * Great for data exploration and transformation
 * Intuitive to write and easy to read, especially when using the "chaining" syntax of pipes
-* Fast on data frames
 
 ## Five basic verbs
 
@@ -35,15 +34,13 @@ This case-level data was acquired by the [Murder Accountability Project](http://
 
 We're going to use the basics of **dplyr** verb functions to analyze the data and see if there are any stories there might be worth pursuing. 
 
-It will require using that huge data set from the importing SPSS data section.
+Remember that huge SPSS data set we imported in the previous chapter?
 
-I've written a script that will import it (See, witnessing the upside to creating scripts already!)
+I saved all that code we wrote to import it, renaming columns, and joining values and labels into an R script: *import_murders.R*. This is reproducibility in action.
 
-Check out what it looks like-- it's about 100 lines long but only 1 line is required to run the script.
+Check out [what it looks like](https://github.com/r-journalism/learn-chapter-3/blob/master/dplyr/import_murders.R)-- it's about 100 lines of code long but only one line is required to run the script below.
 
-{{% notice warning %}}
-Before running the command, make sure the script is in the working directory folder and that the **SHR76_16.sav.zip** file is in the *data* subfolder. For example, on my computer, the *import_murders.R* script is in the *dplyr* folder and **SHR76_16.sav.zip** file is in the *dplyr/data* folder.
-{{% /notice %}}
+**Warning**: Before running the command, make sure the script is in the working directory folder and that the **SHR76_16.sav.zip** file is in the *data* sub folder. For example, on my computer, the *import_murders.R* script is in the *dplyr* folder and **SHR76_16.sav.zip** file is in the *dplyr/data* folder.
 
 **This is going to take a few minutes to run.** 
 
@@ -57,7 +54,13 @@ Alright, the **import_murders.R** script unzipped data, imported it, and transfo
 View(murders)
 ```
 
-![](images/murders.png?classes=shadow)
+
+
+```{r img1, echo = F, out.width="100%"}
+library(knitr)
+include_graphics("images/murders.png")
+```
+
 
 
 Here's the [data dictionary](https://www.dropbox.com/s/lo6tgo8nnbpqeru/MAPdefinitionsSHR.pdf?dl=1).
@@ -86,7 +89,7 @@ Whew, let's not overwhelm ourselves with all this data as we're getting started 
 
 When I get a new data set I like to see what it's made of. So I can begin to get a sense of how to summarize it or take it apart.
 
-Start with the `glimpse()` funtion from **dplyr**-- it will give a brief look at the variables in the data set and the data type. 
+Start with the `glimpse()` function from **dplyr**-- it will give a brief look at the variables in the data set and the data type. 
 
 ```{r glimpse}
 glimpse(murders)
@@ -115,30 +118,37 @@ This is what we'll do with this particular data set:
 
 Let's narrow down our scope by using the `filter()` function.
 
-![](images/filter.png)
+```{r img2, echo = F, out.width="100%"}
+include_graphics("images/filter.png")
+```
 
 Filter works by extracting rows that meet a criteria you set.
 
-![](images/filter_specifics.png)
+```{r img3, echo = F, out.width="100%"}
+include_graphics("images/filter_specifics.png")
+```
 
 You pass the dataframe as a variable to `filter()` first and then you add any logical tests.
 
+**Warning**: One `=` in R is the same as `<-` in that it assigns a value. Logical tests requires two, so  `==` which tests for equal.
 
-{{% notice warning %}}
-One `=` in R is the same as `<-` in that it assigns a value. Logical tests requires two, so  `==` which tests for equal.
-{{% /notice %}}
 
 ```{r filter2}
 df1 <- filter(murders, Relationship_label=="Husband", VicAge > 60, Year==2016)
 
-df2 <- filter(murders, Relationship_label=="Husband" & VicAge > 60 & Year==2016) # same as the line above
+# same as the line above
+df2 <- filter(murders, Relationship_label=="Husband" & VicAge > 60 & Year==2016) 
 
-df3 <- filter(murders, Relationship_label %in% c("Husband", "Boyfriend") | Circumstance_label=="Lovers triangle")
+df3 <- filter(murders, Relationship_label %in% c("Husband", "Boyfriend") |
+                Circumstance_label=="Lovers triangle")
 ```
 
 Check out the new objects in the Environment window of RStudio.
 
-![](images/3dfs.png?classes=shadow?width=20pc)
+```{r img4, echo = F, out.width="100%"}
+include_graphics("images/3dfs.png")
+```
+
 
 Data frames df1 and df2 are exactly the same (Looking for cases in which Husbands were involved, the victim was older than 60, and occurred in 2016)-- only 25 were found. Meanwhile d3 has nearly 32,000 cases in which a Husband or Boyfriend were involved or it was labeled by investigators as a lover's triangle.
 
@@ -205,8 +215,9 @@ filter(murders, 1980 < year, year < 1990)
 4. Stringing together many tests instead of using %in%
 
 ```
-# Not WRONG but INEFFICIENT
-filter(murders, VicRace_label=="Black" | VicRace_label="Unknown" | VicRace_label=="Asian or Pacific Islander")
+# Not WRONG but INEFFICIENT to type out
+filter(murders, VicRace_label=="Black" | VicRace_label="Unknown" | 
+  VicRace_label=="Asian or Pacific Islander")
 
 # RIGHT
 filter(murders, VicRace_label %in% c("Black", "Unknown", "Asian or Pacific Islander"))
@@ -221,7 +232,9 @@ We have 47 variables (aka columns) and we don't need all of them for this basic 
 
 ## select()
 
-![](images/select.png?classes=shadow)
+```{r img5, echo = F, out.width="100%"}
+include_graphics("images/select.png")
+```
 
 You simply list the column names after the data frame you want to extract from.
 
@@ -233,7 +246,9 @@ df1_narrow <- select(df1, State, Agency, Solved_label, Year)
 View(df1_narrow)
 ```
 
-![](images/df1.png?classes=shadow)
+```{r img61, echo = F, out.width="100%"}
+include_graphics("images/df1.png")
+```
 
 You can use a colon between column names if you want all the columns between.
 
@@ -245,10 +260,13 @@ df2_narrow <- select(df1, State, OffAge:OffRace_value, Weapon_label)
 ```
 View(df2_narrow)
 ```
-![](images/df2.png?classes=shadow)
+
+```{r img6, echo = F, out.width="100%"}
+include_graphics("images/df2.png")
+```
 
 
-Use a `-` next to a column name to drop it
+Use a `-` next to a column name to drop it (You can drop more than one column at a time, too).
 ```{r select3}
 # modifying the data frame created above
 df3_narrow <- select(df2_narrow, -Weapon_label)
@@ -258,7 +276,10 @@ df3_narrow <- select(df2_narrow, -Weapon_label)
 View(df3_narrow)
 ```
 
-![](images/df3.png?classes=shadow)
+```{r img7, echo = F, out.width="100%"}
+include_graphics("images/df3.png")
+```
+
 
 There are so many other functions you can use with `select()` to help make your life easier.
 
@@ -277,11 +298,19 @@ Great, let's move on to the next verb.
 
 ## arrange()
 
-![](images/arrange.png)
+
+```{r img8, echo = F, out.width="100%"}
+include_graphics("images/arrange.png")
+```
+
 
 You can include more than one variable (column)-- the first one will take priority but subsequent variables will serve as tie breakers.
 
-![](images/arrange_syntax.png)
+
+```{r img91, echo = F, out.width="100%"}
+include_graphics("images/arrange_syntax.png")
+```
+
 
 
 ```{r arrange}
@@ -301,11 +330,18 @@ This will be very useful. Let's move on to the next verb.
 
 ## mutate()
 
-![](images/mutate.png)
+
+```{r img100, echo = F, out.width="100%"}
+include_graphics("images/mutate.png")
+```
 
 We can create new variables (new columns) with the `mutate()` function.
 
-![](images/mutate_syntax.png)
+
+```{r img111, echo = F, out.width="100%"}
+include_graphics("images/mutate_syntax.png")
+```
+
 
 
 ```{r mutate1}
@@ -317,7 +353,11 @@ murders_ver2 <- mutate(murders,
 View(murders_ver2)
 ```
 
-![](images/mutate1.png?classes=shadow)
+
+```{r img9, echo = F, out.width="100%"}
+include_graphics("images/mutate1.png")
+```
+
 
 ## Arithmetic Operators
 
@@ -333,10 +373,10 @@ You can do more than just math in the context of `mutate()`.
 
 You can use `case_when()` in `mutate()` to create new values based on other values, kind of like an if_else statement.
 
-
 ```{r mutate2}
 # creates an age_difference column
-# and creates a vic_category column that is populated with values depending on the VicRace_label column
+# and creates a vic_category column that is populated with values 
+# depending on the VicRace_label column
 
 murders_ver3 <- mutate(murders,
                        age_difference=OffAge-VicAge,
@@ -345,6 +385,12 @@ murders_ver3 <- mutate(murders,
                          VicRace_label != "White" ~ "Non-White"
                        ))
 ```
+
+
+**Tip**: This is the first of a few times you'll see the `~` (tilde) operator. It means it's a one-sided formula, usually in statistical model formulas. It can be described as "[depends on](https://stackoverflow.com/questions/14976331/use-of-tilde-in-r-programming-language)" You don't need to really to understand why a tilde is necessary-- only that this is how this particular function needs to be set up to work successfully. 
+
+
+
 
 There are two variables being created in the `mutate()` function separated by commas. 
 
@@ -356,7 +402,9 @@ View(murders_ver3)
 ```
 
 
-![](images/white.png?classes=shadow)
+```{r img10, echo = F, out.width="100%"}
+include_graphics("images/white.png")
+```
 
 This is an example of a vectorized function in action. There are some really great ones like `lag()` and `lead()` and `rank()` and we might get into them later. In the meantime, here's a [neat list](https://dplyr.tidyverse.org/reference/mutate.html#useful-functions).
 
@@ -380,7 +428,8 @@ You can also rename variables (columns) with the `select()` function. This is ju
 ```{r select_rename}
 colnames(df3_narrow)
 
-# Keeping only the State and offender gender and age columns but renaming the OffSex_label and OffAge columns
+# Keeping only the State and offender gender and age columns but renaming the 
+# OffSex_label and OffAge columns
 
 df4_renamed <- select(df3_narrow,
                       State,
@@ -394,7 +443,10 @@ df4_renamed
 
 ## summarize()
 
-![](images/summarize.png)
+```{r img11, echo = F, out.width="100%"}
+include_graphics("images/summarize.png")
+```
+
 
 This is the equivalent of creating a pivot table in Excel.
 
@@ -413,6 +465,10 @@ summarize(murders,
           average_offender_age=mean(OffAge))
 ```
 
+
+**Warning**: There's something wrong with the average_offender_age value. Can you figure out what happened?
+
+
 Summarize the data frame **murders**
 
 ```{r summarize4}
@@ -429,10 +485,15 @@ summarize(murders,
 
 You can aggregate data by groups before summarizing.
 
-![](images/groupby.png)
+
+```{r img112, echo = F, out.width="100%"}
+include_graphics("images/groupby.png")
+```
+
 
 ```{r summarize3}
-# This is the same process as before but we're telling R to group up the metro areas before summarizing the data
+# This is the same process as before but we're telling R to group up 
+# the metro areas before summarizing the data
 
 murders <- group_by(murders, MSA_label)
 
@@ -443,6 +504,8 @@ summarize(murders,
 ```
 
 This might be a tough concept to fully understand at first, but we'll go over a few more examples soon so it will hopefully make more sense.
+
+Also, I want to point out that the opposite of `group_by()` is `ungroup()` which you might need later on as you progress.
 
 But let's get over some very useful functionality that comes with the **dplyr** package.
 
@@ -481,7 +544,13 @@ head(dc_annual_murders4)
 Do it all in one line by nesting functions.
 
 ```{r multi2}
-dc_annual_murders <- arrange(summarize(group_by(filter(murders, State=="District of Columbia"), Year), total=n()), desc(total))
+dc_annual_murders <- arrange(
+  summarize(
+    group_by(
+      filter(murders, State=="District of Columbia"), 
+      Year), 
+    total=n()), 
+  desc(total))
 
 # looking at the first 6 rows of data
 
@@ -492,13 +561,16 @@ These options aren't great because the first one involves just way too much typi
 
 Let's talk about the pipe operator `%>%`
 
-You might have noticed that all the functions from **dplyr** all structured similiarly: *The first argument is always the data frame.*
+You might have noticed that all the functions from **dplyr** all structured similarly: *The first argument is always the data frame.*
 
 It takes in a data frame and spits out a data frame.
 
 This function structure is what allows for something like the `%>%` to work.
 
-![](images/pipe.png)
+```{r img12, echo = F, out.width="100%"}
+include_graphics("images/pipe.png")
+```
+
 
 These commands do the same thing. Give it a try.
 
@@ -552,7 +624,7 @@ filter(murders, State=="District of Columbia") %>%
   group_by(Year) %>% 
   summarize(total=n()) %>%
   mutate(previous_year=lag(total)) %>% 
-  mutate(change=previous_year-total)
+  mutate(change=total-previous_year)
 ```
 
 So `mutate()` returns a vector the same length as the input.
@@ -666,7 +738,8 @@ percent_murders <- murders %>%
   # okay, we've got the total, now we can do some math with mutate
   mutate(percent=total/sum(total, na.rm=T)*100) 
   # did you notice the na.rm=T added to the sum function? This removes NAs
-  # That's necessary because if you have a single NA then it will not sum correctly (thanks, statisticians!)
+  # That's necessary because if you have a single NA then it will not sum correctly 
+  # (thanks, statisticians!)
 
 percent_murders
 ```
@@ -681,11 +754,15 @@ percent_murders_women <- murders %>%
   filter(VicSex_label=="Female") %>% 
   arrange(-percent)
 
-# Using the DT (DataTables) library that lets us create searchable tables with the plug-in for jQuery 
+# Using the DT (DataTables) library that lets us create searchable tables with the 
+# plug-in for jQuery 
 # If you don't have DT installed yet, uncomment the line below and run it
 #install.packages("DT")
 
 library(DT)
+```
+
+```{r dt1}
 datatable(percent_murders_women)
 ```
 
@@ -694,5 +771,12 @@ Congratulations, we've gone through a bunch of ways to analyze data.
 
 Now that we've got the tools, let's interrogate the data further using  a couple other methods involving tidying and joining data.
 
+----
+
+## Your turn
+
+Challenge yourself with [these exercises](http://code.r-journalism.com/chapter-3/#section-transforming-and-analyzing-data) so you'll retain the knowledge of this section.
+
+Instructions on how to run the exercise app are on the [intro page](https://learn.r-journalism.com/en/wrangling/) to this section.
 
 

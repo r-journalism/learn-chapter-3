@@ -1,3 +1,9 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
 ## Chapter 3
 
 These files and folders are meant to accompany the [third chapter](https://learn.r-journalism.com/en/wrangling/) from the learn.r-journalism.com class.
@@ -91,3 +97,7 @@ and then
 rmarkdown::run("chapter-3/index.Rmd")
 ```
 
+
+## License
+
+The online version of this course is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).

@@ -235,6 +235,21 @@ div.tocify {
 <pre class="r"><code># If you don't have lubridate installed yet uncomment the line below and run it
 #install.packages(&quot;lubridate&quot;)
 
+# NOTE: IF YOU GET AN ERROR ABOUTZ NOT HAVING A PACKAGE CALLED stringi
+# UNCOMMENT AND RUN THE LINES BELOW IF YOU HAVE A WINDOWS MACHINE
+
+#install.packages(&quot;glue&quot;, type=&quot;win.binary&quot;)
+#install.packages(&quot;stringi&quot;, type=&quot;win.binary&quot;)
+#install.packages(&quot;stringr&quot;, type=&quot;win.binary&quot;)
+#install.packages(&quot;lubridate&quot;, type=&quot;win.binary&quot;)
+
+# UNCOMMENT AND RUN THE LINES BELOW IF YOU HAVE A MAC MACHINE
+
+#install.packages(&quot;glue&quot;, type=&quot;mac.binary&quot;)
+#install.packages(&quot;stringi&quot;, type=&quot;mac.binary&quot;)
+#install.packages(&quot;stringr&quot;, type=&quot;mac.binary&quot;)
+#install.packages(&quot;lubridate&quot;, type=&quot;mac.binary&quot;)
+
 library(lubridate)
 
 mdy(some_date)</code></pre>
@@ -372,9 +387,9 @@ data</code></pre>
 ## 2       Lucy van Pelt     2/4/2007 2007-02-04 2007   Feb   4    Sunday
 ## 3 Peppermint    Patty June 1, 2005 2005-06-01 2005   Jun   1 Wednesday
 ##             age
-## 1 4268.672 days
-## 2 4172.672 days
-## 3 4785.672 days</code></pre>
+## 1 4283.185 days
+## 2 4187.185 days
+## 3 4800.185 days</code></pre>
 <p>And how does that translate into years?</p>
 <p>With some math. We’ll have to turn the column into a number, first.</p>
 <pre class="r"><code>data$age_years &lt;- as.numeric(data$age) / 365.25 #.25 because of leap years
@@ -385,10 +400,16 @@ data</code></pre>
 ## 2       Lucy van Pelt     2/4/2007 2007-02-04 2007   Feb   4    Sunday
 ## 3 Peppermint    Patty June 1, 2005 2005-06-01 2005   Jun   1 Wednesday
 ##             age age_years
-## 1 4268.672 days  11.68699
-## 2 4172.672 days  11.42415
-## 3 4785.672 days  13.10246</code></pre>
+## 1 4283.185 days  11.72672
+## 2 4187.185 days  11.46389
+## 3 4800.185 days  13.14219</code></pre>
 <p>That’s a pretty good start for now. To see more functions and examples, check out <a href="https://cran.r-project.org/web/packages/lubridate/vignettes/lubridate.html">the vignette</a> for <strong>lubridate</strong>.</p>
+<hr />
+</div>
+<div id="your-turn" class="section level2">
+<h2>Your turn</h2>
+<p>Challenge yourself with <a href="http://code.r-journalism.com/chapter-3/#section-dealing-with-dates">these exercises</a> so you’ll retain the knowledge of this section.</p>
+<p>Instructions on how to run the exercise app are on the <a href="https://learn.r-journalism.com/en/wrangling/">intro page</a> to this section.</p>
 </div>
 
 

@@ -1,14 +1,15 @@
 ---
 title: "Handling strings"
 author: "Andrew Ba Tran"
-description: "http://learn.r-journalism.com/en/wrangling/"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+description: http://learn.r-journalism.com/en/wrangling/
 ---
 
 This is from the [third chapter](https://learn.r-journalism.com/en/wrangling/strings/strings/) of [learn.r-journalism.com](https://learn.r-journalism.com/).
+
 
 We're going to use the **stringr** package to manipulate text.
 
@@ -25,10 +26,12 @@ Let's load this data in:
 
 ```{r import, warning=F, message=F}
 messy <- data.frame(name=c("Bill Smith", "jane doe", "John Forest-William"),
-                    email=c("bsmith@themail.com", "jdoe@themail.com", "jfwilliams$geemail.com"),
+                    email=c("bsmith@themail.com", "jdoe@themail.com", 
+                            "jfwilliams$geemail.com"),
                     income=c("$90,000", "$140,000", "E8500"),
                     phone=c("(203) 847-334", "207-999-1122", "2128487345"),
-                    activites=c("fishing, sailing, planting flowers", "reading, raising flowers, biking", "hiking, fishing"))
+                    activites=c("fishing, sailing, planting flowers", "reading, 
+                                raising flowers, biking", "hiking, fishing"))
 
 messy
 ```
@@ -143,35 +146,6 @@ str_sub(x, -3, -1)
 str_sub(x, -1, -1) <- "ies"
 ```
 
-## Match patterns with regular expressions
-
-`str_view(string, pattern)` shows the first match
-`str_view_all(string, pattern)` shows all matches
-
-```{r str_view}
-x <- c("Bill", "Bob", "David")
-str_view(x, "il")
-```
-
-`.` matches any character
-`//.` matches the period
-
-```{r str_view2}
-str_view(x, ".l.")
-str_view(x, "\\.")
-```
-
-## match patterns with regular expressions
-
-`^` matches the start of a string
-`$` matches the end of a string
-
-```{r str_view3}
-str_view(x, "^B..")
-str_view(x, "b$")
-```
-
-Learn more about regex for total control over strings.
 
 ## detect matches
 
@@ -250,3 +224,13 @@ str_to_title(x)
 x <- c(" Assault", "Burglary ", " Kidnapping ")
 str_trim(x)
 ```
+
+
+----
+
+## Your turn
+
+Challenge yourself with [these exercises](http://code.r-journalism.com/chapter-3/#section-handling-strings) so you'll retain the knowledge of this section.
+
+Instructions on how to run the exercise app are on the [intro page](https://learn.r-journalism.com/en/wrangling/) to this section.
+
