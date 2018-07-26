@@ -48,7 +48,7 @@ usethis::use_course("https://github.com/r-journalism/learn-chapter-3/archive/mas
 
 ## Test yourself
 
-There are links to exercise what you've learned spread through out this section.
+After each section, challenge yourself with [these exercises](http://code.r-journalism.com/chapter-3/) so you’ll retain the knowledge you've picked up.
 
 It's possible to run these files locally to test yourself if you've downloaded the files for the chapter as instructed above.
 
