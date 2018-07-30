@@ -408,7 +408,7 @@ bo4$sex_species</code></pre>
 {"columns":[{"label":["NOAA.ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Order"],"name":[2],"type":["int"],"align":["right"]},{"label":["Acquisition"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Name"],"name":[4],"type":["chr"],"align":["left"]},{"label":["Sex"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Species"],"name":[6],"type":["chr"],"align":["left"]},{"label":["Birth.Date"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Captivity.Date"],"name":[8],"type":["chr"],"align":["left"]},{"label":["Owner"],"name":[9],"type":["chr"],"align":["left"]},{"label":["Facility.Date"],"name":[10],"type":["chr"],"align":["left"]},{"label":["Facility"],"name":[11],"type":["chr"],"align":["left"]},{"label":["Purpose"],"name":[12],"type":["chr"],"align":["left"]},{"label":["Status"],"name":[13],"type":["chr"],"align":["left"]}],"data":[{"1":"NOA0000141","2":"1","3":"UNKNOWN","4":"-","5":"MALE","6":"Killer Whale; Orca","7":"1-Jan-78","8":"Unknown","9":"Windsor Safari Park","10":"Unknown","11":"Windsor Safari Park","12":"Public Display","13":"DEAD"},{"1":"NOA0000719","2":"1","3":"UNKNOWN","4":"-","5":"MALE","6":"Beluga Whale","7":"-","8":"Unknown","9":"unreported facility in unspecified foreign country","10":"Unknown","11":"unreported facility in unspecified foreign country","12":"Public Display","13":"-"},{"1":"NOA0000719","2":"2","3":"TRANSFER","4":"BLANCHON","5":"MALE","6":"Beluga Whale","7":"-","8":"-","9":"Wildlife Conservation Society","10":"-","11":"New York Aquarium","12":"Public Display","13":"-"},{"1":"NOA0000719","2":"3","3":"TRANSPORT","4":"-","5":"MALE","6":"Beluga Whale","7":"-","8":"-","9":"Wildlife Conservation Society","10":"19-Jun-62","11":"New York Aquarium","12":"Public Display","13":"DEAD"},{"1":"NOA0000720","2":"1","3":"CAPTURE","4":"-","5":"FEMALE","6":"Beluga Whale","7":"1-Jan-72","8":"25-Jul-76","9":"unreported facility in unspecified foreign country","10":"Unknown","11":"unreported facility in unspecified foreign country","12":"Public Display","13":"-"},{"1":"NOA0000720","2":"2","3":"TRANSFER","4":"KATHY","5":"FEMALE","6":"Beluga Whale","7":"1-Jan-72","8":"-","9":"Mystic Aquarium","10":"-","11":"New York Aquarium","12":"Public Display","13":"-"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Create a new data frame called <strong>seaworlds</strong> and filter out rows that mention “Sea World” in the <em>Facility</em> column.</p>
+<p>Create a new data frame called <strong>seaworlds</strong> and use filter to keep only the rows that mention “Sea World” in the <em>Facility</em> column.</p>
 <div class="tutorial-exercise" data-label="det" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="5">
 <pre class="text"><code>seaworlds &lt;- filter(bo,
                     ______(_____________))
@@ -466,7 +466,7 @@ bo_dates2</code></pre>
 
 bo_dates2</code></pre>
 </div>
-<p>Create a new column called <em>month_number</em> and extract the month (as a number) from the <em>Captivity.Date</em>.</p>
+<p>Create a new column called <em>month_number</em> and extract the month (as a label) from the <em>Captivity.Date</em>.</p>
 <div class="tutorial-exercise" data-label="mo2" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="5">
 <pre class="text"><code>bo_dates3 &lt;- bo_dates2 %&gt;%
   mutate(month_label=____(_______, ______))
@@ -564,9 +564,6 @@ nospace <- function(a) {
 
 
 
-
-
-
 is_bad_code <- function(user_code, check_code, envir_result) {
 
   is_null <- is.null(eval(parse(text = user_code)))
@@ -581,7 +578,7 @@ is_bad_code <- function(user_code, check_code, envir_result) {
   if (is_null!=T){
     if (e_len!=0 & r_len!=0) {
       if (e_type==r_type) {
-       if (e_type!="character" & e_type!="double" & e_type!="integer" & e_type!="logical")  {
+        if (e_type!="character" & e_type!="double" & e_type!="integer" & e_type!="logical") {
           if (e_rows==r_rows && e_cols==r_cols) {
             eval(parse(text = user_code)) != eval(parse(text = check_code), envir = envir_result)
           } else {
@@ -594,7 +591,6 @@ is_bad_code <- function(user_code, check_code, envir_result) {
     } else { TRUE }
   } else { nospace(user_code) != nospace(check_code)}
 }
-
 
 checker <- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
   if (is_bad_code(user_code, check_code, envir_result)) {

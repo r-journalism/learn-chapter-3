@@ -66,9 +66,6 @@ nospace <- function(a) {
 
 
 
-
-
-
 is_bad_code <- function(user_code, check_code, envir_result) {
 
   is_null <- is.null(eval(parse(text = user_code)))
@@ -83,7 +80,7 @@ is_bad_code <- function(user_code, check_code, envir_result) {
   if (is_null!=T){
     if (e_len!=0 & r_len!=0) {
       if (e_type==r_type) {
-       if (e_type!="character" & e_type!="double" & e_type!="integer" & e_type!="logical")  {
+        if (e_type!="character" & e_type!="double" & e_type!="integer" & e_type!="logical") {
           if (e_rows==r_rows && e_cols==r_cols) {
             eval(parse(text = user_code)) != eval(parse(text = check_code), envir = envir_result)
           } else {
@@ -96,7 +93,6 @@ is_bad_code <- function(user_code, check_code, envir_result) {
     } else { TRUE }
   } else { nospace(user_code) != nospace(check_code)}
 }
-
 
 checker <- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
   if (is_bad_code(user_code, check_code, envir_result)) {
@@ -575,7 +571,7 @@ head(bo)
 ```
 
 
-Create a new data frame called **seaworlds** and filter out rows that mention "Sea World" in the *Facility* column.
+Create a new data frame called **seaworlds** and use filter to keep only the rows that mention "Sea World" in the *Facility* column.
 
 
 ```{r det, exercise=TRUE, exercise.lines=5}
@@ -648,7 +644,7 @@ bo_dates2
 
 
 
-Create a new column called *month_number* and extract the month (as a number) from the *Captivity.Date*.
+Create a new column called *month_number* and extract the month (as a label) from the *Captivity.Date*.
 
 
 
