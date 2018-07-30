@@ -2,6 +2,8 @@
 title: "Murders case study"
 author: "Andrew Ba Tran"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     toc: yes
     toc_float: yes
@@ -240,17 +242,15 @@ msagrp_filtered <- msagrp %>%
 
 ```
 
-```{r dt1}
-datatable(msagrp_filtered)
-```
-
 We have narrowed down 10,000 clusters to 99.
 
-Let's expand the scope apply what we did to MSAs to Counties.
+Let's change the scope and apply what we did to MSAs to Counties.
 
-Why is this distinction important? Well, Metro Statistical Areas are smaller than Counties.
+Why is this distinction important? Well, Metro Statistical Areas consists of at least one county-- sometimes whole counties or pieces of it.
 
-Counties are so large that they're often covered by multiple agencies like town police departments and state police and sheriff's deputies focusing on different jurisdictions. Serial killers aren't limited to by their geography, so it's important to expand the scope.
+Counties are so large that they're often covered by multiple agencies like town police departments and state police and sheriff's deputies focusing on different jurisdictions. These things vary but it's important to note that counties and MSAs-- these are just different ways to **bin** or categorize the data.
+
+Serial killers aren't limited to by their geography, so it's important to be flexible with the scope.
 
 
 
@@ -264,10 +264,6 @@ countygrp <- murders %>%
   arrange(desc(cases))
 ```
 
-```{r dt2}
-
-datatable(countygrp)
-```
 
 Alright, we now have 325 clusters.
 
@@ -303,10 +299,6 @@ countygrp2 <- murders %>%
   arrange(desc(cases))
 ```
 
-```{r dt3}
-
-datatable(countygrp2)
-```
 
 Do you think a killer might be targeting a specific age group?
 
@@ -340,11 +332,6 @@ countygrp3 <- murders %>%
   mutate(clearance=round(solved/cases*100,2)) %>% 
   filter(VicSex_label=="Female" & clearance <= 33 & cases > 1) %>% 
   arrange(desc(cases))
-```
-
-```{r dt4}
-
-datatable(countygrp3)
 ```
 
 Well done. 
