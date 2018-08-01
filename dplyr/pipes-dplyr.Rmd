@@ -286,7 +286,7 @@ There are so many other functions you can use with `select()` to help make your 
 ```
 # This extracts all variables with names that contain "_label"
 
-labels_only_columns <- select(murders(contains("_label"))
+labels_only_columns <- select(murders(contains("_label")))
 str(labels_only_columns)
 ```
 
